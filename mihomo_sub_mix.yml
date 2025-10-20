@@ -1,0 +1,28 @@
+# 直接将mihomo官方的subconverter 一起拉过来不需要两个一起那么麻烦了
+# docker compose -f mihomo_sub_mix.yml up -d
+# 访问地址 
+services:
+  subconverter:
+    image: metacubex/subconverter:latest
+    container_name: subconverter
+    ports:
+      - "15400:25500"  # 宿主机15400映射到容器25500
+    restart: always
+
+  localsub:
+    image: lzyjolly/localsub:latest
+    container_name: localsub
+    ports:
+      - "10096:10096"  # 宿主机10096映射到容器10096
+    environment:
+      - PORT=10096
+      # 直接使用容器名访问 subconverter 服务
+      - CONVERTER_URL=http://subconverter:25500/sub?
+      - NODE_FILE=/app/merged_nodes.txt  # 不用改，但是要与下面(容器内地址AA.txt)对应
+      # CONFIG_URL 可根据需要启用
+      # - CONFIG_URL=https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini
+    volumes:
+      - /root/latters/merged_nodes.txt:/app/merged_nodes.txt # 此处格式--->>容器外的地址AA.txt:容器内地址AA.txt
+    restart: unless-stopped
+    depends_on:
+      - subconverter  # localsub 启动时等待 subconverter

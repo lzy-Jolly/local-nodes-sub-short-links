@@ -22,7 +22,8 @@ services:
       # CONFIG_URL 可根据需要启用
       # - CONFIG_URL=https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini
     volumes:
-      - /root/latters/merged_nodes.txt:/app/merged_nodes.txt # 此处格式--->>容器外的地址AA.txt:容器内地址AA.txt
+    # 请修改./merged_nodes.txt这个外部地址，默认这样写是与 mihomo_sub_mix.yml这个文件同目录下
+      - ./merged_nodes.txt:/app/merged_nodes.txt # 此处格式--->>容器外的地址AA.txt:容器内地址AA.txt
     restart: unless-stopped
     depends_on:
       - subconverter  # localsub 启动时等待 subconverter

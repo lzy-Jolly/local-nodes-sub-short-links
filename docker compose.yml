@@ -1,0 +1,18 @@
+services:
+  localsub:
+    image: localsub:2.0   # 使用你本地构建的镜像
+    container_name: localsub
+    ports:
+      - 10096:10096   # 支持环境变量覆盖端口，默认10096
+    environment:
+      - PORT=${PORT:-10096}
+      - NODE_FILE=/app/merged_nodes.txt
+      - CONVERTER_URL=http://192.168.20.237:15400/sub?
+      # - CONFIG_URL=https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini
+    volumes:
+      - ./merged_nodes.txt:/app/merged_nodes.txt   # 挂载单个节点文件
+    restart: unless-stopped
+# 用法 docker compose up -d
+# 访问 http://docker服务的ip:10096/local（或你映射的端口）
+# 就会将 merged_nodes.txt 里的节点转换成本地订阅格式
+
